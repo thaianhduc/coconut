@@ -9,13 +9,14 @@ namespace Coconut.Web
 {
     public class Startup
     {
+        private readonly IConfigurationRoot _configuration;
         public Startup(IHostingEnvironment env)
         {
-            /*var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appSettings.json");
 
-            var configuration = builder.Build();
-            var appKey = configuration["appConfig_Hello"];*/
+            _configuration = builder.Build();
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -35,7 +36,7 @@ namespace Coconut.Web
             //app.UseMvc();
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync($"You are requesting {context.Request.Path}");
+                await context.Response.WriteAsync($"{_configuration["Message"]}. And you are? {context.Request.Path}");
             });
         }
     }

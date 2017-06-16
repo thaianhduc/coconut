@@ -1,0 +1,10 @@
+﻿{
+  "Message": "Override the simple message",
+  "ConnectionStrings": {
+    "ef": "Connection string to SQL database for EF"
+  },
+  "Author": {
+    "Name": "Thai Anh Duc",    
+    "Job": "Software Developer" 
+  } 
+}
