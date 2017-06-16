@@ -3,6 +3,10 @@ namespace Coconut.Web
     public class AppSettings
     {
         public string Message { get; set; }
+    }
+
+    public class GlobalSettings
+    {
         public ConnectionStrings ConnectionStrings { get; set; }
         public Author Author { get; set; }
     }

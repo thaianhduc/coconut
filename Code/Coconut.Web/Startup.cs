@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,16 +12,18 @@ namespace Coconut.Web
     public class AppSettingsController
     {
         private readonly AppSettings _appSettings;
-        public AppSettingsController(IOptions<AppSettings> appSettingsOptions)
+        private readonly GlobalSettings _globalSettings;
+        public AppSettingsController(IOptions<AppSettings> appSettingsOptions, IOptions<GlobalSettings> globalSettingsOptions)
         {
             _appSettings = appSettingsOptions.Value;
+            _globalSettings = globalSettingsOptions.Value;
         }
 
         public Task GetAppSettings(HttpContext context)
         {
             return context.Response.WriteAsync($"Thie is AppSettingsController: {_appSettings.Message}; " +
-                                               $"EF Connection String: {_appSettings.ConnectionStrings.Ef}; " +
-                                               $"Author: {_appSettings.Author.Name}");
+                                               $"EF Connection String: {_globalSettings.ConnectionStrings.Ef}; " +
+                                               $"Author: {_globalSettings.Author.Name}");
         }
     }
     public class Startup
@@ -32,7 +33,7 @@ namespace Coconut.Web
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appSettings.json")
+                .AddJsonFile("appsettings.json")
                 .AddJsonFile("appComplexSettings.json");
 
             _configuration = builder.Build();
@@ -41,7 +42,8 @@ namespace Coconut.Web
         {
             // Register the ability to read options in configuration
             services.AddOptions();
-            services.Configure<AppSettings>(_configuration);
+            services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
+            services.Configure<GlobalSettings>(_configuration);
 
             // Register a controller with a lifestyle of httprequest scoped
             services.AddScoped<AppSettingsController>();
