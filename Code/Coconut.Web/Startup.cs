@@ -2,30 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Coconut.Web
 {
-    public class AppSettingsController
-    {
-        private readonly AppSettings _appSettings;
-        private readonly GlobalSettings _globalSettings;
-        public AppSettingsController(IOptions<AppSettings> appSettingsOptions, IOptions<GlobalSettings> globalSettingsOptions)
-        {
-            _appSettings = appSettingsOptions.Value;
-            _globalSettings = globalSettingsOptions.Value;
-        }
-
-        public Task GetAppSettings(HttpContext context)
-        {
-            return context.Response.WriteAsync($"Thie is AppSettingsController: {_appSettings.Message}; " +
-                                               $"EF Connection String: {_globalSettings.ConnectionStrings.Ef}; " +
-                                               $"Author: {_globalSettings.Author.Name}");
-        }
-    }
     public class Startup
     {
         private readonly IConfigurationRoot _configuration;
@@ -44,9 +28,9 @@ namespace Coconut.Web
             services.AddOptions();
             services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
             services.Configure<GlobalSettings>(_configuration);
-
-            // Register a controller with a lifestyle of httprequest scoped
-            services.AddScoped<AppSettingsController>();
+            services.AddSingleton(_configuration);
+            services.AddRouting();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,14 +42,12 @@ namespace Coconut.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            //app.UseMvc();
-            app.Run(HandleRequest);
-        }
-
-        public Task HandleRequest(HttpContext context)
-        {
-           var controller = context.RequestServices.GetRequiredService<AppSettingsController>();
-            return controller.GetAppSettings(context);
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
