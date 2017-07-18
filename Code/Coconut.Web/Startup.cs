@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Coconut.CoreLogic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,8 @@ namespace Coconut.Web
             services.AddSingleton(_configuration);
             services.AddRouting();
             services.AddMvc();
+
+            services.AddTransient<UglyFactTeller>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

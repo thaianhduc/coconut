@@ -12,6 +12,9 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspnetCore.Mvc" Version="1.1.3" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coconut.CoreLogic\Coconut.CoreLogic.csproj" />
+  </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
