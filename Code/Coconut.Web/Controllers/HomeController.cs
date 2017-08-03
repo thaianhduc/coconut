@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Coconut.CoreLogic;
+using Coconut.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coconut.Web.Controllers
@@ -28,6 +29,22 @@ namespace Coconut.Web.Controllers
             // Ignore all data validation. Simply assume that the request is correct.
             var dob = DateTime.ParseExact(birthday, "dd-MM-yyyy", CultureInfo.CurrentCulture);
             return View( _uglyFactTeller.TellMe(dob));
+        }
+
+        public IActionResult CreateUser(CreateUserModel model)
+        {
+            return View();
+        }
+
+        public IActionResult EditUser(EditUserModel model)
+        {
+            return View();
+        }
+
+        // Reuse the same model for 2 different features: Create or Edit
+        public IActionResult SaveUser(UserModel model)
+        {
+            return View();
         }
     }
 }
